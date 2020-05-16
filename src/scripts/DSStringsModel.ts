@@ -1,11 +1,14 @@
 import { sendHTTPRequest } from "./Models/HTTPWorker";
 import { BACKEND_DOMAIN_URL } from "../constants/BasicConstants";
 
-export function getAllStringsDS(): Promise<any> {
+export function getAllStringsDS(increated_users_inj:string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
         sendHTTPRequest({
-            method: "GET",
-            url: BACKEND_DOMAIN_URL + "/api/dsstring/getall"
+            method: "POST",
+            url: BACKEND_DOMAIN_URL + "/api/dsstring/getall",
+            data: {
+                created_users_inj: increated_users_inj
+            }
         })
             .then(response => {
                 resolve(response.data);

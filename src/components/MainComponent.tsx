@@ -2,6 +2,7 @@ import React from 'react';
 import { getAllStringsDS, createStringDS, deleteStringDS } from '../scripts/DSStringsModel';
 import { TextField, Button } from '@material-ui/core';
 import { logoutUser } from '../scripts/Models/AuthorizationModel';
+import { KEY_LOCAL_STORAGE_USER_NAME } from '../constants/LocalStorageConstants';
 
 export default class MainComponent extends React.Component<any, any>
 {
@@ -14,7 +15,22 @@ export default class MainComponent extends React.Component<any, any>
             lastName: "",
             age: 0
         };
-        getAllStringsDS().then(data => this.setState({dsStrings: data}));
+        this.getAllStandard();
+    }
+
+    getAllStandard(): void
+    {
+        let increated_users_inj = localStorage.getItem(KEY_LOCAL_STORAGE_USER_NAME);
+        if (increated_users_inj !== null) {
+            getAllStringsDS(increated_users_inj)
+                .then((response:any) => this.setState({dsStrings: response}));
+        }
+    }
+
+    getAllEjection(): void
+    {
+        getAllStringsDS("%%")
+            .then((response:any) => this.setState({dsStrings: response}));
     }
 
     resetState()
@@ -68,18 +84,36 @@ export default class MainComponent extends React.Component<any, any>
         } = this.state;
         return (
             <div>
-                <Button
+                <div
+                    style={{display: "flex",flexDirection: "row", width: "100%", margin: "30px", justifyContent: "space-around"}}
+                >
+                    <Button
+                        variant="contained"
+                        onClick={() => {this.getAllStandard()}}
+                    >
+                        обычная загрузка
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => {this.getAllEjection()}}
+                    >
+                        инъекция
+                    </Button>
+                    <Button
                     variant="contained"
                     onClick={() => {logoutUser()}}
                 >
                     
                     Выйти
-                </Button>
+                    </Button>
+                </div>
+               
                 <div>
                     <table>
                         <caption>Люди</caption>
                         <thead>
                         <tr>
+                            <th>Создатель</th>
                             <th>Имя</th>
                             <th>Фамилия</th>
                             <th>Возраст</th>
@@ -88,6 +122,8 @@ export default class MainComponent extends React.Component<any, any>
                         </thead>
                         <tbody>
                         <tr>
+                                <td>
+                                </td>
                                 <td>
                                     <TextField
                                         variant="outlined"
@@ -127,6 +163,7 @@ export default class MainComponent extends React.Component<any, any>
                             </tr>
                             {dsStrings.map((man: any) => (
                                 <tr key={"KEY_ITEM_" + man.id}>
+                                    <td>{man.created_users_inj}</td>
                                     <td>{man.first_name}</td>
                                     <td>{man.last_name}</td>
                                     <td>{man.age}</td>
