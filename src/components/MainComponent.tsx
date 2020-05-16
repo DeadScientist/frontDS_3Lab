@@ -89,6 +89,24 @@ export default class MainComponent extends React.Component<any, any>
                 >
                     <Button
                         variant="contained"
+                        onClick={() => {this.setState({
+                            firstName: "<div onClick=\"alert('тебя взломали!')\">неприметный текст</div>",
+                            lastName: "<div onMouseMove=\"alert('haha')\">неприметный текст</div>"
+                        })}}
+                    >
+                        инъекция жс 1
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => {this.setState({
+                            firstName: "<b style='color: red; font-size: 32px; font-weight: bold; background: blue'>оп, что за?</b>",
+                            lastName: "<b style='color: white; font-size: 62px; font-weight: bold; background: green'>ыыыы</b>"
+                        })}}
+                    >
+                        инъекция жс 2
+                    </Button>
+                    <Button
+                        variant="contained"
                         onClick={() => {this.getAllStandard()}}
                     >
                         обычная загрузка
@@ -105,7 +123,7 @@ export default class MainComponent extends React.Component<any, any>
                 >
                     
                     Выйти
-                    </Button>
+                 </Button>
                 </div>
                
                 <div>
@@ -164,8 +182,26 @@ export default class MainComponent extends React.Component<any, any>
                             {dsStrings.map((man: any) => (
                                 <tr key={"KEY_ITEM_" + man.id}>
                                     <td>{man.created_users_inj}</td>
-                                    <td>{man.first_name}</td>
-                                    <td>{man.last_name}</td>
+                                    <td 
+                                        id={"stringFirstName" + man.id}
+                                        ref={() => {
+                                            let id = "stringFirstName" + man.id;
+                                            let object = document.getElementById(id);
+                                            if (object) {
+                                                object.innerHTML = man.first_name;
+                                            }
+                                        }}
+                                    />
+                                    <td
+                                        id={"stringLastName" + man.id}
+                                        ref={() => {
+                                            let id = "stringLastName" + man.id;
+                                            let object = document.getElementById(id);
+                                            if (object) {
+                                                object.innerHTML = man.last_name;
+                                            }
+                                        }}
+                                    />
                                     <td>{man.age}</td>
                                     <td>
                                         <Button
